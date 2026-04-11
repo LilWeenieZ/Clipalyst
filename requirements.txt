@@ -1,0 +1,9 @@
+pywin32
+anthropic
+python-dotenv
+customtkinter
+pystray
+Pillow
+keyboard
+pyinstaller
+sentry-sdk
