@@ -1,6 +1,6 @@
 import json
-import os
 from pathlib import Path
+from src.config import DATA_ROOT
 
 class SettingsManager:
     DEFAULT_SETTINGS = {
@@ -22,7 +22,9 @@ class SettingsManager:
         "crash_reporting_enabled": True,
     }
 
-    def __init__(self, settings_path="./data/settings.json"):
+    def __init__(self, settings_path=None):
+        if settings_path is None:
+            settings_path = DATA_ROOT / "settings.json"
         self.settings_path = Path(settings_path)
         self.settings = self.DEFAULT_SETTINGS.copy()
         self.listeners = []

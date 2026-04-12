@@ -67,7 +67,8 @@ logger = logging.getLogger("clipalyst.main")
 # ---------------------------------------------------------------------------
 # Single-instance lock
 # ---------------------------------------------------------------------------
-_LOCK_PATH = Path("./data/app.lock")
+from src.config import DATA_ROOT
+_LOCK_PATH = DATA_ROOT / "app.lock"
 _lock_fh = None  # module-level so it stays open for the process lifetime
 
 
