@@ -13,7 +13,7 @@ Clipalyst is a professional **Windows clipboard manager** that captures everythi
 - 🔍 **Instant Search** — Global hotkey (`Ctrl+Alt+Z`).
 - 🛡️ **Privacy First** — Per-app ignore list (e.g., password managers).
 - 📂 **Zero Cloud** — Local SQLite database. Your data never leaves your machine.
-- ⭐ **Pro Features** — 5,000 items history, custom AI models, and unlimited pins. 
+- ⭐ **[Pro Features](https://lilweeniez.gumroad.com/l/ehcanp)** — 5,000 items history, custom AI models, and unlimited pins. 
 
 ## 🚀 Getting Started
 
