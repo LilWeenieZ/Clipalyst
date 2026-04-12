@@ -20,6 +20,8 @@ build/
 dist/
 release/
 *.spec
+ClipalystSetup.exe
+Output/
 
 # IDEs and Editors
 .vscode/
