@@ -25,20 +25,30 @@ Clipalyst is a professional **Windows clipboard manager** that captures everythi
 
 ### Installation
 ## Method 1
-1.  **Download latest Release**
-    [Download](https://github.com/LilWeenieZ/Clipalyst/releases)
+1.  **[Download](https://github.com/LilWeenieZ/Clipalyst/releases) latest Release**
+    
 2.  Run installer
+   
 3.  Add ANTHROPIC_API_KEY to Environmental Variables
+   
     Press 'Win+R' to open Run and enter:
+    
     `rundll32 sysdm.cpl,EditEnvironmentVariables`
+    
     (Environmental Variables window should appear)
     
     In 'User variables' click on 'New...' and enter:
+
     Variable name: `ANTHROPIC_API_KEY`
+    
     Variable value: `[Enter your Anthropic API Key]`
+    
     Click 'OK'
+    
     Click 'OK'
-5.  Open `Clipalyst.exe`
+    
+4.  Open `Clipalyst.exe`
+   
     You're all set!
 ## Method 2
 1.  **Clone the repository:**
