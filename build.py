@@ -64,6 +64,15 @@ def _check_prerequisites() -> None:
     if not ICON.exists():
         sys.exit(f"[ERROR] Icon file not found: {ICON}")
 
+    # Deep clean: remove any previous build artifacts to ensure no stale icons
+    for folder in (ROOT / "build", ROOT / "dist", ROOT / "release"):
+        if folder.exists():
+            print(f"[build] Cleaning {folder.name} directory...")
+            try:
+                shutil.rmtree(folder)
+            except Exception as e:
+                print(f"[build] Warning: Could not fully clean {folder.name}: {e}")
+
     try:
         import PyInstaller  # noqa: F401
     except ImportError:
