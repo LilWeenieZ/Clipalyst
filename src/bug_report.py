@@ -4,7 +4,7 @@ import urllib.parse
 
 # Import VERSION from main inside the function to avoid circular imports
 # main -> settings_window -> bug_report -> main
-GITHUB_ISSUES_URL = "https://github.com/yourusername/clipalyst/issues/new"
+GITHUB_ISSUES_URL = "https://github.com/LilWeenieZ/Clipalyst/issues/new"
 
 def open_bug_report():
     """Opens a pre-filled GitHub Issues URL in the default browser."""
