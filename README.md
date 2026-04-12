@@ -4,7 +4,7 @@
 
 Clipalyst is a professional **Windows clipboard manager** that captures everything you copy, tags it automatically with AI, and surfaces it instantly via a beautiful keyboard-driven interface.
 
-![Clipalyst Logo](assets/icon.ico) *(Replace with screenshot if available)*
+![Clipalyst Logo](assets/icon.ico) 
 
 ## ✨ Features
 
@@ -27,7 +27,7 @@ Clipalyst is a professional **Windows clipboard manager** that captures everythi
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/yourusername/Clipalyst.git
+    git clone https://github.com/LilWeenieZ/Clipalyst.git
     cd Clipalyst
     ```
 
