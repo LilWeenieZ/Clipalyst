@@ -329,7 +329,7 @@ class SearchWindow(ctk.CTkToplevel):
             text_color="white",
             font=("Inter", 11, "bold"),
             corner_radius=8,
-            command=lambda: webbrowser.open("https://yoursite.com/upgrade")
+            command=lambda: webbrowser.open("https://lilweeniez.gumroad.com/l/ehcanp")
         ).pack(side="right")
 
     # ── Dragging ──────────────────────────────────────────────────────────────

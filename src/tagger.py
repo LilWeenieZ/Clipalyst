@@ -8,6 +8,7 @@ import json
 import logging
 import os
 import re
+from src.config import ANTHROPIC_API_KEY
 from anthropic import (
     Anthropic,
     AuthenticationError,
@@ -15,7 +16,6 @@ from anthropic import (
     APIConnectionError,
     APIStatusError,
 )
-from dotenv import load_dotenv
 
 logger = logging.getLogger(__name__)
 
@@ -72,9 +72,8 @@ class AITagger(threading.Thread):
         self._tags_processed: int  = 0
         self._last_tagged_at: datetime.datetime | None = None
 
-        # Load API key from .env using python-dotenv
-        load_dotenv()
-        self.api_key = os.getenv("ANTHROPIC_API_KEY")
+        # Load API key from src.config
+        self.api_key = ANTHROPIC_API_KEY
         if self.api_key:
             self.client = Anthropic(api_key=self.api_key)
             logger.debug("Anthropic client initialised (key …%s).", self.api_key[-4:])
@@ -140,10 +139,9 @@ class AITagger(threading.Thread):
                 self.client = Anthropic(api_key=key)
                 logger.info("AITagger API key updated (…%s).", key[-4:])
             else:
-                # Fall back to env var
-                env_key = os.getenv("ANTHROPIC_API_KEY", "")
-                self.client = Anthropic(api_key=env_key) if env_key else None
-                logger.info("AITagger API key reset to env var.")
+                # Fall back to config
+                self.client = Anthropic(api_key=ANTHROPIC_API_KEY) if ANTHROPIC_API_KEY else None
+                logger.info("AITagger API key reset to config.")
 
 
     def _looks_like_api_key(self, content: str) -> bool:

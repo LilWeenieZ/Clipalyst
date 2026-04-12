@@ -36,3 +36,5 @@ release/
 # OS artifacts
 Thumbs.db
 Desktop.ini
+
+src/licence_config.py

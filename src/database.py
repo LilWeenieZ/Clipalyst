@@ -1,10 +1,33 @@
 import sqlite3
 import os
 from datetime import datetime
+from pathlib import Path
+
+
+def _default_db_path() -> str:
+    """Return an absolute, writable path for the database.
+
+    Preference order:
+    1. src.config.DATA_ROOT  — the canonical location used by the rest of the app.
+    2. %APPDATA%\\Clipalyst   — Windows fallback if the config import fails.
+    3. ~/Clipalyst           — cross-platform last resort.
+    """
+    try:
+        from src.config import DATA_ROOT  # type: ignore
+        return str(DATA_ROOT / "clipboard.db")
+    except Exception:
+        pass
+
+    appdata = os.environ.get("APPDATA")
+    if appdata:
+        return str(Path(appdata) / "Clipalyst" / "clipboard.db")
+
+    return str(Path.home() / "Clipalyst" / "clipboard.db")
+
 
 class ClipboardDB:
-    def __init__(self, db_path="./data/clipboard.db"):
-        self.db_path = db_path
+    def __init__(self, db_path: str | None = None):
+        self.db_path = db_path if db_path is not None else _default_db_path()
         self._ensure_db_dir()
         self._init_db()
 

@@ -106,7 +106,7 @@ class SettingsWindow(ctk.CTkToplevel):
                 text_color=_GOLD,
                 font=("Inter", 13, "bold"),
                 corner_radius=10,
-                command=lambda: webbrowser.open("https://yoursite.com/upgrade"),
+                command=lambda: webbrowser.open("https://lilweeniez.gumroad.com/l/ehcanp"),
             )
             btn.grid(row=row, column=0, sticky="ew", padx=20, pady=(4, 16))
             btn.bind("<Enter>", lambda e: btn.configure(text_color="white"))
@@ -303,7 +303,7 @@ class SettingsWindow(ctk.CTkToplevel):
             self._build_licence_inactive(card)
 
     def _build_licence_active(self, card):
-        """Show a 'Pro active' badge + deactivate option."""
+        """Show a 'Pro active' badge + email + deactivate option."""
         badge_row = ctk.CTkFrame(card, fg_color="transparent")
         badge_row.pack(fill="x", padx=16, pady=(14, 4))
 
@@ -321,19 +321,21 @@ class SettingsWindow(ctk.CTkToplevel):
             text_color=_GOLD,
         ).pack(side="left")
 
-        stored_email = self.settings_manager.get("activation_email", "")
-        if stored_email:
-            ctk.CTkLabel(
-                card,
-                text=f"Registered to: {stored_email}",
-                font=("Inter", 11),
-                text_color=_MUTED,
-                anchor="w",
-            ).pack(fill="x", padx=16, pady=(0, 6))
+        # Use the new get_licence_info API
+        info = _licence.get_licence_info()
+        email = info.get("email", "unknown")
+        
+        ctk.CTkLabel(
+            card,
+            text=f"Registered to: {email}",
+            font=("Inter", 11),
+            text_color=_MUTED,
+            anchor="w",
+        ).pack(fill="x", padx=16, pady=(0, 6))
 
         ctk.CTkButton(
             card,
-            text="Deactivate licence",
+            text="Remove licence",
             height=30,
             fg_color="transparent",
             hover_color=_BORDER,
@@ -346,10 +348,10 @@ class SettingsWindow(ctk.CTkToplevel):
         ).pack(anchor="w", padx=16, pady=(0, 14))
 
     def _build_licence_inactive(self, card):
-        """Show email + key entry form."""
+        """Show key entry form (masked)."""
         ctk.CTkLabel(
             card,
-            text="Enter the activation key you received via email to unlock Pro.",
+            text="Enter the activation key you received via Gumroad to unlock Pro.",
             font=("Inter", 11),
             text_color=_MUTED,
             anchor="w",
@@ -357,37 +359,18 @@ class SettingsWindow(ctk.CTkToplevel):
             justify="left",
         ).pack(fill="x", padx=16, pady=(14, 8))
 
-        # Email field
-        ctk.CTkLabel(
-            card, text="Email address:",
-            font=("Inter", 12), text_color=_MUTED, anchor="w",
-        ).pack(fill="x", padx=16, pady=(0, 4))
-
-        self._lic_email_var = ctk.StringVar(
-            value=self.settings_manager.get("activation_email", "")
-        )
-        ctk.CTkEntry(
-            card,
-            textvariable=self._lic_email_var,
-            placeholder_text="you@example.com",
-            fg_color=_SURFACE, border_color=_BORDER, border_width=1,
-            text_color=_TEXT, font=("Inter", 12),
-            corner_radius=6,
-        ).pack(fill="x", padx=16, pady=(0, 8))
-
-        # Activation key field
+        # Activation key field (masked)
         ctk.CTkLabel(
             card, text="Activation key:",
             font=("Inter", 12), text_color=_MUTED, anchor="w",
         ).pack(fill="x", padx=16, pady=(0, 4))
 
-        self._lic_key_var = ctk.StringVar(
-            value=self.settings_manager.get("activation_key", "")
-        )
+        self._lic_key_var = ctk.StringVar()
         ctk.CTkEntry(
             card,
             textvariable=self._lic_key_var,
-            placeholder_text="XXXX-XXXX-XXXX-XXXX-XXXX-XXXX-XXXX-XXXX",
+            placeholder_text="XXXX-XXXX-XXXX-XXXX",
+            show="*",
             fg_color=_SURFACE, border_color=_BORDER, border_width=1,
             text_color=_TEXT, font=("Inter", 12),
             corner_radius=6,
@@ -418,36 +401,65 @@ class SettingsWindow(ctk.CTkToplevel):
         ).pack(fill="x", padx=16, pady=(0, 14))
 
     def _on_activate(self):
-        key   = self._lic_key_var.get().strip()
-        email = self._lic_email_var.get().strip()
+        key = self._lic_key_var.get().strip()
         if not key:
             self._lic_feedback.configure(
                 text="Please enter your activation key.", text_color=_MUTED
             )
             return
-        success, msg = _licence.activate(key, email)
-        self._lic_feedback.configure(
-            text=msg,
-            text_color=_GOLD if success else _RED,
-        )
-        if success:
-            # Update the in-memory Pro flag so the rest of the window can react
+        
+        # Show 'working' state
+        self._lic_feedback.configure(text="Verifying...", text_color=_MUTED)
+        self.update_idletasks()
+        
+        result = _licence.activate_licence(key)
+        if result["success"]:
             self._is_pro = True
+            self._lic_feedback.configure(
+                text=f"✅ Pro activated! Registered to {result['email']}",
+                text_color=_GOLD,
+            )
+            # Refresh the card UI after a short delay
+            self.after(1500, self._refresh_ui)
+        else:
+            self._lic_feedback.configure(
+                text=f"❌ {result['error']}",
+                text_color=_RED,
+            )
 
     def _on_deactivate(self):
         if not messagebox.askyesno(
-            "Deactivate Licence",
+            "Remove Licence",
             "Are you sure you want to remove your Pro licence from this device?",
             parent=self,
         ):
             return
-        _licence.deactivate()
+        _licence.deactivate_licence()
         self._is_pro = False
         messagebox.showinfo(
             "Licence Removed",
-            "Your Pro licence has been deactivated. Restart the app to apply changes.",
+            "Your Pro licence has been deactivated. Some features are now restricted.",
             parent=self,
         )
+        self._refresh_ui()
+
+    def _refresh_ui(self):
+        """Re-build the scrollable frame to reflect premium state changes."""
+        # For simplicity in this CustomTkinter layout, we rebuild the whole scroll area
+        # or at least hit the core sections that depend on _is_pro.
+        for child in self.winfo_children():
+            if isinstance(child, ctk.CTkScrollableFrame):
+                child.destroy()
+        
+        scroll = ctk.CTkScrollableFrame(
+            self,
+            fg_color=_BG,
+            scrollbar_button_color=_BORDER,
+            scrollbar_button_hover_color=_BLUE,
+        )
+        scroll.grid(row=0, column=0, sticky="nsew", padx=0, pady=0)
+        scroll.grid_columnconfigure(0, weight=1)
+        self._build_ui(scroll)
 
     # ── AI Model section ──────────────────────────────────────────────────────
 
