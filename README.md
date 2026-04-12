@@ -10,7 +10,7 @@ Clipalyst is a professional **Windows clipboard manager** that captures everythi
 
 - 🔋 **Silent Capture** — Lightweight background process (500ms intervals).
 - 🧠 **AI Auto-Tagging** — Classified as `code`, `url`, `email`, `api_key`, `path`, etc.
-- 🔍 **Instant Search** — Summond via global hotkey (`Ctrl+Alt+V`).
+- 🔍 **Instant Search** — Global hotkey (`Ctrl+Alt+Z`).
 - 🛡️ **Privacy First** — Per-app ignore list (e.g., password managers).
 - 📂 **Zero Cloud** — Local SQLite database. Your data never leaves your machine.
 - ⭐ **Pro Features** — 5,000 items history, custom AI models, and unlimited pins. 
