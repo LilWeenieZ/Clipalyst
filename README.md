@@ -1,4 +1,4 @@
-# ✂️ Clipalyst
+# ✂️ Clipalyst (Under development)
 
 ### The AI-powered clipboard manager that remembers everything — so you don't have to.
 
